@@ -4,10 +4,22 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
-import rootReducer from './reducers'
+//import rootReducer from './reducers'
 import { createStore } from 'redux'
+import LeadApp from './Store/Leads';
 
-const store = createStore(rootReducer)
+const store = createStore(() => ({
+  data: {
+    total_created_leads: 100,
+    total_purchased_leads: 20,
+    percentage:20
+  },
+  success: true,
+  message: 'Database connection lost'
+}));
+
+//const store = createStore(LeadApp);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,18 +1,11 @@
 const initialState = {
-  todos: [
-    { id: 0, text: 'Learn React', completed: true },
-    { id: 1, text: 'Learn Redux', completed: false, color: 'purple' },
-    { id: 2, text: 'Build something fun!', completed: false, color: 'blue' }
-  ],
-  filters: {
-    status: 'All',
-    colors: []
-  }
-}
-
-function nextTodoId(todos) {
-  const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1)
-  return maxId + 1
+  data: {
+    total_created_leads: 100,
+    total_purchased_leads: 20,
+    percentage:20
+  },
+  success: true,
+  message: 'Database connection lost'
 }
 
 // Use the initialState as a default value
@@ -20,23 +13,20 @@ export default function appReducer(state = initialState, action) {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // Do something here based on the different types of actions
-    case 'todos/todoAdded': {
+    case 'upgrade': {
       // We need to return a new state object
       return {
         // that has all the existing state data
         ...state,
         // but has a new array for the `todos` field
-        todos: [
+        data: {
           // with all of the old todos
-          ...state.todos,
-          // and the new todo object
-          {
-            // Use an auto-incrementing numeric ID for this example
-            id: nextTodoId(state.todos),
-            text: action.payload,
-            completed: false
-          }
-        ]
+          // and the new todo object          
+            total_created_leads: 100,
+            total_purchased_leads: 80,
+            percentage:80
+          
+        }
       }
     }
     default:
