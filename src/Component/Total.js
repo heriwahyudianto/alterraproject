@@ -1,7 +1,8 @@
 import '../App.css';
-import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux'
 
 function Total(props) {  
+  const leads = useSelector(state => state.leads);
   return (
     <div className='w50Cent txtCenter'>
       <div className=' bold colorGray'>

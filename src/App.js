@@ -4,7 +4,7 @@ import { VictoryPie, VictoryLabel, VictoryAnimation, VictoryLegend } from "victo
 import Footer from './Component/Footer';
 import Total from './Component/Total';
 import { useDispatch, useSelector } from 'react-redux'
-import { incrementLead } from './Store/Leads';
+import {add, decrease, fromBackend} from './features/leads/leadSlice'
 
 function App() {
   const leads = useSelector(state => state.leads);
@@ -33,22 +33,28 @@ function App() {
       headers: {}
     });*/ 
     //let result = await response.json()
+    dispatch(fromBackend({
+      totalCreatedLeads: 100,
+      totalPurchasedLeads: 30,
+      percentage:30
+    }))
+    console.log(leads)
     let result = {
       success: true,
       message: 'Database connection lost',
       data: {
-        total_created_leads: 100,
-        total_purchased_leads: 80,
-        percentage:80
+        totalCreatedLeads: leads.totalCreatedLeads,
+        totalPurchasedLeads: leads.totalPurchasedLeads,
+        percentage:leads.percentage
       }
     }
     if (result.success) {  
-      setTotalCreatedLeads(result.data.total_created_leads)
-      setTotalPurchasedLeads(result.data.total_purchased_leads)
-      setPersen(result.data.percentage)
+      //setTotalCreatedLeads(result.data.totalCreatedLeads)
+      //setTotalPurchasedLeads(result.data.totalPurchasedLeads)
+      //setPersen(result.data.percentage)
       setGraph({
-        percent: result.data.percentage,
-        data: getData(result.data.percentage)
+        percent: leads.percentage,
+        data: getData(leads.percentage)
       }); 
     } else {
       setErrMsg(result.message)
@@ -63,7 +69,7 @@ function App() {
     <div className="App">
       {errMsg === null ? (
         <>
-        {leads}
+        
         <div className='txtCenter mt1rem bold'>TOTAL LEADS WHO HAVE PURCHASED</div>      
         <div className='pieCnt'>
           <svg viewBox="0 0 400 400" width="100%" height="100%">
@@ -109,12 +115,16 @@ function App() {
           </div>    
         </div>
         <div className='totalCnt'>
-          <Total title="TOTAL CREATED LEADS" total={totalCreatedLeads} />
+          <Total title="TOTAL CREATED LEADS" total={leads.totalCreatedLeads} />
           <div className='leftBorder'></div>
-          <Total title="TOTAL PURCHASED LEADS" total={totalPurchasedLeads} />
+          <Total title="TOTAL PURCHASED LEADS" total={leads.totalPurchasedLeads} />
         </div>
-        <Footer persen={persen} totalCreatedLeads={totalCreatedLeads} totalPurchasedLeads={totalPurchasedLeads}
-         /* onClick={() => dispatch(incrementLead(10))}*/
+        <Footer
+          onClick={() => dispatch(add({
+            totalCreatedLeads: 100,
+            totalPurchasedLeads: 90,
+            percentage:90
+          }))}
         />
         </>)
       : <div className='bgLightGray p1rem  txtCenter bold'>{errMsg}</div> 
