@@ -49,13 +49,6 @@ function App() {
       }
     }
     if (result.success) {  
-      //setTotalCreatedLeads(result.data.totalCreatedLeads)
-      //setTotalPurchasedLeads(result.data.totalPurchasedLeads)
-      //setPersen(result.data.percentage)
-      setGraph({
-        percent: leads.percentage,
-        data: getData(leads.percentage)
-      }); 
     } else {
       setErrMsg(result.message)
     }
@@ -68,8 +61,7 @@ function App() {
    return (
     <div className="App">
       {errMsg === null ? (
-        <>
-        
+        <>        
         <div className='txtCenter mt1rem bold'>TOTAL LEADS WHO HAVE PURCHASED</div>      
         <div className='pieCnt'>
           <svg viewBox="0 0 400 400" width="100%" height="100%">
@@ -80,7 +72,7 @@ function App() {
               animate={{ duration: 500 }}
               width={400}
               height={400}
-              data={graph.data}
+              data={getData(leads.percentage)}
               innerRadius={120}
               cornerRadius={25}
               labels={() => null}
@@ -102,7 +94,7 @@ function App() {
                     verticalAnchor="middle"
                     x={200}
                     y={200}
-                    text={`${Math.round(newProps.percent)}%`}
+                    text={`${Math.round(leads.percentage)}%`}
                     style={{ fontSize: 45, fontWeight: "bold" }}
                   />
                 );
