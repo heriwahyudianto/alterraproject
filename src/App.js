@@ -4,13 +4,14 @@ import { VictoryPie, VictoryLabel, VictoryAnimation, VictoryLegend } from "victo
 import Footer from './Component/Footer';
 import Total from './Component/Total';
 import { useDispatch, useSelector } from 'react-redux'
-import {add, decrease, fromBackend} from './features/leads/leadSlice'
+import {add, decrease, fromBackend, fetchLeads} from './features/leads/leadSlice'
 
 function App() {
+  const dispatch = useDispatch();
   const leads = useSelector(state => state.leads);
   console.log(leads)
-  const dispatch = useDispatch();
-
+  const leadsStatus = useSelector(state => state.leads.status)
+  console.log('leadsStatus = ', leadsStatus)
   const getData = (percent) => {
     return [
       { x: 1, y: 100 - percent },
@@ -22,45 +23,17 @@ function App() {
     percent: 0,
     data: getData(0)
   });
-  const [persen,setPersen] = useState(0)
-  const [totalCreatedLeads, setTotalCreatedLeads] = useState(100)
-  const [totalPurchasedLeads, setTotalPurchasedLeads] = useState(80)
-  const [errMsg, setErrMsg] = useState(null)
   
-  const getBackendData = async () => {
-    /*
-    let response = await fetch(`https://backend.com/query=${query}`, {
-      headers: {}
-    });*/ 
-    //let result = await response.json()
-    dispatch(fromBackend({
-      totalCreatedLeads: 100,
-      totalPurchasedLeads: 30,
-      percentage:30
-    }))
-    console.log(leads)
-    let result = {
-      success: true,
-      message: 'Database connection lost',
-      data: {
-        totalCreatedLeads: leads.totalCreatedLeads,
-        totalPurchasedLeads: leads.totalPurchasedLeads,
-        percentage:leads.percentage
-      }
-    }
-    if (result.success) {  
-    } else {
-      setErrMsg(result.message)
-    }
-  }
-
   useEffect(() => {
-    getBackendData()
-  }, []);
+    if (leadsStatus === 'idle') {
+      console.log('diaktif')
+      dispatch(fetchLeads())
+    }
+  }, [leadsStatus, dispatch]);
 
    return (
     <div className="App">
-      {errMsg === null ? (
+      {leadsStatus === 'fulfilled' ? (
         <>        
         <div className='txtCenter mt1rem bold'>TOTAL LEADS WHO HAVE PURCHASED</div>      
         <div className='pieCnt'>
@@ -86,7 +59,10 @@ function App() {
                 }
               }}
             />
-            <VictoryAnimation duration={500} data={graph}>
+            <VictoryAnimation duration={500} data={{
+    percent: 10,
+    data: getData(10)
+  }}>
               {(newProps) => {
                 return (
                   <VictoryLabel
@@ -119,7 +95,7 @@ function App() {
           }))}
         />
         </>)
-      : <div className='bgLightGray p1rem  txtCenter bold'>{errMsg}</div> 
+      : <div className='bgLightGray p1rem  txtCenter bold'>{leads.status}</div> 
       }
     </div>
   );
