@@ -58,7 +58,7 @@ export const fetchLeads = createAsyncThunk('leads/fromBackend', async () => {
       headers: {}
     })    
   let data = await response.json();
-  console.log(data);
+  console.log('eAsyncThunk = ',data);
   return data
 })
 
